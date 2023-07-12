@@ -120,20 +120,6 @@ int is_food_w(input *input)
     }
 }
 
-//TODO: finalizar a logica de ranqueamento
-void create_ranking_file(data *data)
-{
-    char *ranking_file = create_output_files_path(
-        data->input.directory,
-        RANKING_FILE_NAME
-    );
-
-    FILE *file = fopen(ranking_file, "w");
-
-    fprintf(file, "%d\n", 1);
-    fclose(file);
-}
-
 void create_statistics_file(data *data)
 {
     char *statistics_file = create_output_files_path(

@@ -13,10 +13,29 @@
 #define MESSAGE_WALL_COLISION "Movimento %d (%c) colidiu com a parede\n"
 #define MESSAGE_GHOST_COLISION "Movimento %d (%c) fim de jogo por encostar em um fantasma\n"
 
+#define POSSIBLE_MOVIMENTS 4
 #define finalize() printf(" - %s - Linha: %d\n", __FILE__, __LINE__); exit(EXIT_FAILURE);
 #define check_error(condition, mesg, ...) \
     if (!condition) { printf(mesg, ##__VA_ARGS__); finalize(); }
 #define check_read(reading) check_error(reading, ERROR_READ_DATA)
+
+typedef struct ranking
+{
+    int number;
+    char letter;
+} ranking;
+
+typedef struct group
+{
+    int length;
+    char *moviments;
+} group;
+
+typedef struct draw
+{
+    int length;
+    group **draw_group;
+} draw;
 
 typedef struct statistics
 {
@@ -77,6 +96,7 @@ typedef struct data
 void show_map(data *data);
 void create_starter_file(input *input);
 void update_summary_file(output *output, char moviment, char *message);
+void move_pacman(data *data, char moviment);
 void destroy(data *data);
 void destroy_multiple(short int amount, ...);
 
