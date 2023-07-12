@@ -1,4 +1,6 @@
-.bin/
-.report/
-.doxygen/
-.objects/
+*.txt
+
+bin/
+report/
+doxygen/
+objects/
