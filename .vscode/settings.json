@@ -4,7 +4,8 @@
         "config",
         "output",
         "structures",
-        "ranking"
+        "ranking",
+        "helpers"
     ],
     "files.associations": {
         "stdarg.h": "c"
