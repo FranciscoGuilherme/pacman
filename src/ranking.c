@@ -3,12 +3,12 @@
 
 #include "headers/pacman.h"
 #include "structures/headers/draw.h"
+#include "structures/headers/output.h"
 
 //TODO: finalizar a logica de ranqueamento
 void create_ranking_file(data *data)
 {
-    draw *draw_food;
-    draw *draw_wall;
+    draw *draw;
     ranking *partial_ranking;
     char *ranking = calloc(POSSIBLE_MOVIMENTS + 1, sizeof(char));
     char letters[POSSIBLE_MOVIMENTS] = {'w', 'a', 's', 'd'};
@@ -23,13 +23,13 @@ void create_ranking_file(data *data)
         ranking[index] = partial_ranking->letter;
     }
 
-    draw_food = validate_draw(&data->output, &ranking, get_food_statistics);
-    create_rank(draw_food, &data->output, ranking, 'f');
+    draw = validate_draw(&data->output, &ranking, get_food_statistics);
+    create_rank(draw, &data->output, ranking, 'f');
 
     //draw_wall->length = 0;
     //TODO: modularizacao FODA de contextos
 
-    if (!draw_food->length)
+    if (!draw->length)
     {
         //criar arquivo de ranking
     }
@@ -43,16 +43,14 @@ void create_ranking_file(data *data)
 
 void create_rank(draw *draw, output *output, char *ranking, char context)
 {
-    struct draw *aux = NULL;
-
     switch (context)
     {
         case 'f': create_rank_by_context(draw, output, ranking, get_wall_statistics, 'w'); break;
         case 'w': create_rank_by_context(draw, output, ranking, get_moviments_statistics, 'm'); break;
         case 'm':
         {
-            sort_elements_by_alphabet();
-            return;
+            ascending_order(ranking);
+            destroy_draw(draw);
         }
         default: return;
     }
@@ -60,14 +58,23 @@ void create_rank(draw *draw, output *output, char *ranking, char context)
 
 void create_rank_by_context(draw *draw, output *output, char *ranking, char context, short int (*context_statistics)(void *, char))
 {
-    for (short int index = 0; index < draw->length; index++)
+    struct draw *aux = NULL;
+
+    for (int index = 0; index < draw->length; index++)
     {
-        struct draw *aux = validate_draw(output, ranking, context_statistics);
+        aux = validate_draw(output, ranking, context_statistics);
+
         if (aux->has_draw) create_rank(aux, output, ranking, context);
         if (!aux->has_draw)
         {
-            //TODO: desenhar a lista de ranqueamento
+            for (int index = 0; index < aux->length; index++)
+            {
+                ranking[index] = aux->draw_group[index]->moviments[0];
+            }
         }
+
+        destroy_draw(draw);
+        destroy_draw(aux);
     }
 }
 
@@ -100,57 +107,6 @@ draw *validate_draw(output *output, char *ranking, short int (*context_statistic
     }
 
     return &draw;
-}
-
-short int get_food_statistics(output *output, char letter)
-{
-    switch (letter)
-    {
-        case 'w': return output->w_statistics.moviments_food_taken;
-        case 'a': return output->a_statistics.moviments_food_taken;
-        case 's': return output->s_statistics.moviments_food_taken;
-        case 'd': return output->d_statistics.moviments_food_taken;
-    }
-}
-
-short int get_wall_statistics(output *output, char letter)
-{
-    switch (letter)
-    {
-        case 'w': return output->w_statistics.moviments_wall_colision;
-        case 'a': return output->a_statistics.moviments_wall_colision;
-        case 's': return output->s_statistics.moviments_wall_colision;
-        case 'd': return output->d_statistics.moviments_wall_colision;
-    }
-}
-
-short int get_moviments_statistics(output *output, char letter)
-{
-    switch (letter)
-    {
-        case 'w': return output->w_statistics.moviments;
-        case 'a': return output->a_statistics.moviments;
-        case 's': return output->s_statistics.moviments;
-        case 'd': return output->d_statistics.moviments;
-    }
-}
-
-void set_biggest_value(ranking *ranking, char letter, short int number)
-{
-    if (ranking->number < number)
-    {
-        ranking->number = number;
-        ranking->letter = letter;
-    }
-}
-
-void set_lowest_value(ranking *ranking, char letter, short int number)
-{
-    if (ranking->number < number)
-    {
-        ranking->number = number;
-        ranking->letter = letter;
-    }
 }
 
 ranking *get_biggest_food_rank(data *data, char letter)
@@ -193,4 +149,20 @@ ranking *get_lowest_wall_rank(data *data, char letter)
     return &partial_ranking;
 }
 
-void sort_elements_by_alphabet() {}
+void set_biggest_value(ranking *ranking, char letter, short int number)
+{
+    if (ranking->number < number)
+    {
+        ranking->number = number;
+        ranking->letter = letter;
+    }
+}
+
+void set_lowest_value(ranking *ranking, char letter, short int number)
+{
+    if (ranking->number < number)
+    {
+        ranking->number = number;
+        ranking->letter = letter;
+    }
+}

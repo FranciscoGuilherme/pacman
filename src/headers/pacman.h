@@ -20,18 +20,13 @@
     if (!condition) { printf(mesg, ##__VA_ARGS__); finalize(); }
 #define check_read(reading) check_error(reading, ERROR_READ_DATA)
 
+#include "structures/headers/output.h"
+
 typedef struct ranking
 {
     int number;
     char letter;
 } ranking;
-
-typedef struct statistics
-{
-    unsigned long long int moviments: 32;
-    unsigned long long int moviments_food_taken: 12;
-    unsigned long long int moviments_wall_colision: 8;
-} statistics;
 
 typedef struct coordenates
 {
@@ -63,18 +58,6 @@ typedef struct input_data
     unsigned short int columns;
     unsigned short int total_food;
 } input;
-
-typedef struct output_data
-{
-    char **trail;
-    char *summary_file;
-    statistics w_statistics;
-    statistics a_statistics;
-    statistics s_statistics;
-    statistics d_statistics;
-    int moviments_without_food;
-    unsigned short int food;
-} output;
 
 typedef struct data
 {
