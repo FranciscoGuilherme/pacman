@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 
 #include "headers/pacman.h"
+#include "structures/headers/draw.h"
 
 //TODO: finalizar a logica de ranqueamento
 void create_ranking_file(data *data)
@@ -90,67 +90,31 @@ void create_rank(draw *draw, output *output, char *ranking, char context)
 draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(void *, char))
 {
     draw draw;
+    short int index = 0;
     short int nearby = 0;
     short int actual = 0;
+    short int counter = 1;
     draw.length = 0;
 
-    for (short int index = 0; index < POSSIBLE_MOVIMENTS;)
+    for (; !moviments_limit_achieved(index + counter); index += counter, counter = 0, counter++)
     {
-        push_element_to_group(&draw, draw.length, 1, ranking[index]);
-
+        if (actual != nearby) add_new_group(&draw);
+        push_element_to_group(&draw, 1, ranking[index]);
         actual = (*context_statistics)(output, ranking[index]);
-        nearby = (*context_statistics)(output, ranking[index + 1]);
+        nearby = (*context_statistics)(output, ranking[index + counter]);
 
-        for (short int counter = 1; actual == nearby; counter++)
+        for (; actual == nearby && !moviments_limit_achieved(index + counter);)
         {
-            push_element_to_group(&draw, draw.length, 1, ranking[index + counter]);
+            push_element_to_group(&draw, 1, ranking[index + counter]);
 
-            nearby = (*context_statistics)(output, ranking[index + counter]);
-            if (actual != (*context_statistics)(output, ranking[index + counter + 1]))
+            if (!moviments_limit_achieved(index + (counter++)))
             {
-                index = counter + 1;
-
-                if (index != POSSIBLE_MOVIMENTS)
-                {
-                    //TODO: realocar memoria para o tamanho das listas
-                }
+                nearby = (*context_statistics)(output, ranking[index + counter]);
             }
         }
     }
 
     return &draw;
-}
-
-void push_element_to_group(draw *draw, short int index, short int amount, ...)
-{
-    va_list valist;
-    va_start(valist, amount);
-
-    short int total = draw->draw_group[index]->length + amount;
-    short int counter = draw->draw_group[index]->length;
-
-    if (!draw->draw_group)
-    {
-        draw->length++;
-        draw->draw_group = (group **) malloc(sizeof(group *));
-        draw->draw_group[0] = (group *) malloc(sizeof(group));
-        draw->draw_group[0]->length = amount;
-        draw->draw_group[0]->moviments = (char *) malloc(amount * sizeof(char));
-        draw->draw_group[draw->draw_group[0]->length - 1]
-            ->moviments[0] = va_arg(valist, char);
-    }
-
-    for (; counter < total; counter++)
-    {
-        draw->draw_group[index]->length += amount;
-        draw->draw_group[index]->moviments = (char *) realloc(
-            draw->draw_group[index]->moviments,
-            draw->draw_group[index]->length * sizeof(char)
-        );
-        draw->draw_group[index]->moviments[counter] = va_arg(valist, char);
-    }
-
-    va_end(valist);
 }
 
 short int get_food_statistics(output *output, char letter)
