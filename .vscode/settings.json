@@ -3,7 +3,8 @@
         "project",
         "config",
         "output",
-        "structures"
+        "structures",
+        "ranking"
     ],
     "files.associations": {
         "stdarg.h": "c"
