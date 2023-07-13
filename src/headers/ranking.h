@@ -2,6 +2,7 @@
 #define _RANKING_H
 
 #include "headers/pacman.h"
+#include "structures/headers/draw.h"
 
 void create_statistics_file(data *data);
 draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(void *, char));
