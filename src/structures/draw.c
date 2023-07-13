@@ -4,6 +4,16 @@
 
 void add_new_group(draw *draw)
 {
+    if (!draw->draw_group)
+    {
+        draw->length = 1;
+        draw->draw_group = (group **) malloc(sizeof(group *));
+        draw->draw_group[0] = (group *) malloc(sizeof(group));
+        draw->draw_group[0]->length = 0;
+
+        return;
+    }
+
     draw->length++;
     draw->draw_group = (group **) realloc(
         draw->draw_group,
@@ -22,9 +32,7 @@ void push_element_to_group(draw *draw, short int amount, ...)
 
     if (!draw->draw_group)
     {
-        draw->length++;
-        draw->draw_group = (group **) malloc(sizeof(group *));
-        draw->draw_group[0] = (group *) malloc(sizeof(group));
+        add_new_group(draw);
         draw->draw_group[0]->length = amount;
         draw->draw_group[0]->moviments = (char *) malloc(amount * sizeof(char));
         draw->draw_group[0]->moviments[0] = va_arg(valist, char);
