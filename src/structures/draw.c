@@ -42,6 +42,7 @@ void push_element_to_group(draw *draw, short int amount, ...)
 
     for (; counter < total; counter++)
     {
+        draw->has_draw = 1;
         draw->draw_group[draw->length - 1]->length += amount;
         draw->draw_group[draw->length - 1]->moviments = (char *) realloc(
             draw->draw_group[draw->length - 1]->moviments,

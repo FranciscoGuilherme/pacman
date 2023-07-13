@@ -47,54 +47,39 @@ void create_rank(draw *draw, output *output, char *ranking, char context)
 
     switch (context)
     {
-        case 'f':
-        {
-            for (short int index = 0; index < draw->length; index++)
-            {
-                aux = validate_draw(output, draw->draw_group[index]->moviments, get_wall_statistics);
-
-                //TODO: olhar desempate para movimentos
-                //TODO: continuar varrendo as listas
-            }
-
-            break;
-        }
-        case 'w':
-        {
-            for (short int index = 0; index < draw->length; index++)
-            {
-                aux = validate_draw(output, draw->draw_group[index]->moviments, get_wall_statistics);
-
-                //TODO: olhar desempate para movimentos
-                //TODO: continuar varrendo as listas
-            }
-
-            break;
-        }
+        case 'f': create_rank_by_context(draw, output, ranking, get_wall_statistics, 'w'); break;
+        case 'w': create_rank_by_context(draw, output, ranking, get_moviments_statistics, 'm'); break;
         case 'm':
         {
-            for (short int index = 0; index < draw->length; index++)
-            {
-                aux = validate_draw(output, draw->draw_group[index]->moviments, get_wall_statistics);
-
-                //TODO: olhar desempate para movimentos
-                //TODO: continuar varrendo as listas
-            }
-
-            break;
+            sort_elements_by_alphabet();
+            return;
         }
         default: return;
+    }
+}
+
+void create_rank_by_context(draw *draw, output *output, char *ranking, char context, short int (*context_statistics)(void *, char))
+{
+    for (short int index = 0; index < draw->length; index++)
+    {
+        struct draw *aux = validate_draw(output, ranking, context_statistics);
+        if (aux->has_draw) create_rank(aux, output, ranking, context);
+        if (!aux->has_draw)
+        {
+            //TODO: desenhar a lista de ranqueamento
+        }
     }
 }
 
 draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(void *, char))
 {
     draw draw;
+    draw.length = 0;
+    draw.has_draw = 0;
     short int index = 0;
     short int nearby = 0;
     short int actual = 0;
     short int counter = 1;
-    draw.length = 0;
 
     for (; !moviments_limit_achieved(index + counter); index += counter, counter = 0, counter++)
     {
@@ -136,6 +121,17 @@ short int get_wall_statistics(output *output, char letter)
         case 'a': return output->a_statistics.moviments_wall_colision;
         case 's': return output->s_statistics.moviments_wall_colision;
         case 'd': return output->d_statistics.moviments_wall_colision;
+    }
+}
+
+short int get_moviments_statistics(output *output, char letter)
+{
+    switch (letter)
+    {
+        case 'w': return output->w_statistics.moviments;
+        case 'a': return output->a_statistics.moviments;
+        case 's': return output->s_statistics.moviments;
+        case 'd': return output->d_statistics.moviments;
     }
 }
 
@@ -196,3 +192,5 @@ ranking *get_lowest_wall_rank(data *data, char letter)
 
     return &partial_ranking;
 }
+
+void sort_elements_by_alphabet() {}

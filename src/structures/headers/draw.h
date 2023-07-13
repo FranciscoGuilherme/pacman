@@ -10,6 +10,7 @@ typedef struct group
 typedef struct draw
 {
     int length;
+    short int has_draw;
     group **draw_group;
 } draw;
 
