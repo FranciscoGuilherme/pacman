@@ -3,6 +3,7 @@
 
 #include "headers/input.h"
 #include "headers/pacman.h"
+#include "headers/helpers.h"
 
 void initialize(data *data)
 {
