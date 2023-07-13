@@ -2,5 +2,6 @@
 #define _HELPERS_H
 
 char *create_output_files_path(char *directory, char *file_base_name);
+void ascending_order(char *chars_list);
 
 #endif

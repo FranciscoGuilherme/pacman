@@ -17,3 +17,22 @@ char *create_output_files_path(char *directory, char *file_base_name)
 
     return file;
 }
+
+void ascending_order(char *chars_list)
+{
+    char temp;
+    int length = strlen(chars_list);
+
+    for (int i = 0; i < length - 1; i++)
+    {
+        for (int j = i + 1; j < length; j++)
+        {
+            if (chars_list[i] > chars_list[j])
+            {
+                temp = chars_list[i];
+                chars_list[i] = chars_list[j];
+                chars_list[j] = temp;
+            }
+        }
+    }
+}
