@@ -53,3 +53,20 @@ void push_element_to_group(draw *draw, short int amount, ...)
 
     va_end(valist);
 }
+
+void destroy_draw(draw *draw)
+{
+    if (draw)
+    {
+        if (draw->draw_group)
+        {
+            for (int index = 0; index < draw->length; index++)
+            {
+                free(draw->draw_group[index]->moviments);
+                free(draw->draw_group[index]);
+            }
+        }
+
+        free(draw);
+    }
+}
