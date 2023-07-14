@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "../headers/pacman.h"
+#include "../headers/helpers.h"
 #include "../headers/reports/statistics.h"
 
 void create_statistics_file(data *data)
@@ -21,12 +22,12 @@ void create_statistics_file(data *data)
         data->output.d_statistics.moviments_wall_colision;
 
     FILE *file = fopen(statistics_file, "w");
-    fprinf(file, "Numero de movimentos: %d\n", moviments_done);
-    fprinf(file, "Numero de movimentos sem pontuar: %d\n", data->output.moviments_without_food);
-    fprinf(file, "Numero de colisoes com parede: %d\n", moviments_wall_colision);
-    fprinf(file, "Numero de movimentos para baixo: %d\n", data->output.s_statistics.moviments);
-    fprinf(file, "Numero de movimentos para cima: %d\n", data->output.w_statistics.moviments);
-    fprinf(file, "Numero de movimentos para esquerda: %d\n", data->output.a_statistics.moviments);
-    fprinf(file, "Numero de movimentos para direita: %d\n", data->output.d_statistics.moviments);
+    fprintf(file, "Numero de movimentos: %d\n", moviments_done);
+    fprintf(file, "Numero de movimentos sem pontuar: %d\n", data->output.moviments_without_food);
+    fprintf(file, "Numero de colisoes com parede: %d\n", moviments_wall_colision);
+    fprintf(file, "Numero de movimentos para baixo: %d\n", data->output.s_statistics.moviments);
+    fprintf(file, "Numero de movimentos para cima: %d\n", data->output.w_statistics.moviments);
+    fprintf(file, "Numero de movimentos para esquerda: %d\n", data->output.a_statistics.moviments);
+    fprintf(file, "Numero de movimentos para direita: %d\n", data->output.d_statistics.moviments);
     fclose(file);
 }
