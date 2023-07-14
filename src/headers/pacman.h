@@ -20,7 +20,7 @@
     if (!condition) { printf(mesg, ##__VA_ARGS__); finalize(); }
 #define check_read(reading) check_error(reading, ERROR_READ_DATA)
 
-#include "structures/headers/output.h"
+#include "structures/output.h"
 
 typedef struct ranking
 {
@@ -67,9 +67,11 @@ typedef struct data
 
 void show_map(data *data);
 void create_starter_file(input *input);
-void update_summary_file(output *output, char moviment, char *message);
-void create_statistics_file(data *data);
 void move_pacman(data *data, char moviment);
+int is_wall_w(input *input);
+int is_food_w(input *input);
+void create_statistics_file(data *data);
+void game_over(data *data);
 void destroy(data *data);
 void destroy_multiple(short int amount, ...);
 
