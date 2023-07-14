@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "headers/pacman.h"
-#include "structures/headers/draw.h"
-#include "structures/headers/output.h"
+#include "../headers/pacman.h"
+#include "../headers/helpers.h"
+#include "../headers/reports/ranking.h"
+#include "../headers/structures/draw.h"
+#include "../headers/structures/output.h"
 
-//TODO: finalizar a logica de ranqueamento
 void create_ranking_file(data *data)
 {
+    FILE *file;
     draw *draw;
     ranking *partial_ranking;
     char *ranking = calloc(POSSIBLE_MOVIMENTS + 1, sizeof(char));
@@ -23,21 +25,20 @@ void create_ranking_file(data *data)
         ranking[index] = partial_ranking->letter;
     }
 
-    draw = validate_draw(&data->output, &ranking, get_food_statistics);
+    file = fopen(ranking_file, "w");
+    draw = validate_draw(&data->output, ranking, get_food_statistics);
     create_rank(draw, &data->output, ranking, 'f');
 
-    //draw_wall->length = 0;
-    //TODO: modularizacao FODA de contextos
-
-    if (!draw->length)
+    for (int index = 0; index < POSSIBLE_MOVIMENTS; index++)
     {
-        //criar arquivo de ranking
+        fprintf(file, "%c,%hu,%hu,%d\n",
+            ranking[index],
+            get_food_statistics(&data->output, ranking[index]),
+            get_wall_statistics(&data->output, ranking[index]),
+            get_moviments_statistics(&data->output, ranking[index])
+        );
     }
 
-    //TODO: verificar igualdade e separar em grupos
-
-    FILE *file = fopen(ranking_file, "w");
-    fprintf(file, "%d\n", 1);
     fclose(file);
 }
 
@@ -78,7 +79,7 @@ void create_rank_by_context(draw *draw, output *output, char *ranking, char cont
     }
 }
 
-draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(void *, char))
+draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(struct output_data *, char))
 {
     draw draw;
     draw.length = 0;

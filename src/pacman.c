@@ -5,6 +5,8 @@
 
 #include "headers/pacman.h"
 #include "headers/helpers.h"
+#include "headers/reports/summary.h"
+#include "headers/reports/statistics.h"
 
 void show_map(data *data)
 {
@@ -52,27 +54,9 @@ void create_starter_file(input *input)
     fclose(file);
 }
 
-void update_summary_file(output *output, char moviment, char *message)
-{
-    FILE *file = fopen(output->summary_file, "a");
-    int moviments_done =
-        output->w_statistics.moviments +
-        output->a_statistics.moviments +
-        output->s_statistics.moviments +
-        output->d_statistics.moviments;
-
-    if (file == NULL)
-    {
-        file = fopen(output->summary_file, "w");
-    }
-
-    fprintf(file, message, moviments_done, moviment);
-    fclose(file);
-}
-
-//TODO: definir no arquivo .h
 void move_pacman(data *data, char moviment)
 {
+    //TODO: movimentar fantasmas
     data->output.moviments_without_food++;
 
     switch (moviment)
@@ -95,13 +79,17 @@ void move_pacman(data *data, char moviment)
                 update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
 
                 if (data->output.food == data->input.total_food)
-                {}
+                {
+                    game_over(data);
+                }
             }
+
+            //TODO: validar se for fantasma atualizar no resumo.txt
+            //TODO: validar se for tunel
         }
     }
 }
 
-//TODO: definir no arquivo .h
 int is_wall_w(input *input)
 {
     if (input->pacman.row - 1 == 0 ||
@@ -111,7 +99,6 @@ int is_wall_w(input *input)
     }
 }
 
-//TODO: definir no arquivo .h
 int is_food_w(input *input)
 {
     if (input->original[input->pacman.row - 1][input->pacman.column] == '*')
@@ -120,47 +107,11 @@ int is_food_w(input *input)
     }
 }
 
-void create_statistics_file(data *data)
-{
-    char *statistics_file = create_output_files_path(
-        data->input.directory,
-        STATISTICS_FILE_NAME
-    );
-    int moviments_done =
-        data->output.w_statistics.moviments +
-        data->output.a_statistics.moviments +
-        data->output.s_statistics.moviments +
-        data->output.d_statistics.moviments;
-    short int moviments_wall_colision =
-        data->output.w_statistics.moviments_wall_colision +
-        data->output.a_statistics.moviments_wall_colision +
-        data->output.s_statistics.moviments_wall_colision +
-        data->output.d_statistics.moviments_wall_colision;
-
-    FILE *file = fopen(statistics_file, "w");
-    fprinf(file, "Numero de movimentos: %d\n", moviments_done);
-    fprinf(file, "Numero de movimentos sem pontuar: %d\n", data->output.moviments_without_food);
-    fprinf(file, "Numero de colisoes com parede: %d\n", moviments_wall_colision);
-    fprinf(file, "Numero de movimentos para baixo: %d\n", data->output.s_statistics.moviments);
-    fprinf(file, "Numero de movimentos para cima: %d\n", data->output.w_statistics.moviments);
-    fprinf(file, "Numero de movimentos para esquerda: %d\n", data->output.a_statistics.moviments);
-    fprinf(file, "Numero de movimentos para direita: %d\n", data->output.d_statistics.moviments);
-    fclose(file);
-}
-
-//TODO: definir no arquivo .h e finalizar logica de fim de jogo
 void game_over(data *data)
 {
     create_ranking_file(data);
     create_statistics_file(data);
 }
-
-//TODO: definir no arquivo .h e desenhar e implementar logica de validacao
-int keep_reading(
-    int moviments_amount,
-    int moviments_limit
-)
-{}
 
 void destroy(data *data)
 {
