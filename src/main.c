@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 {
     data data;
     char *map_file;
+    char current_moviment;
 
     data.input.directory = argv[1];
 
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
     for (int amount = 0; amount < data.input.moviments; amount++)
     {
         show_map(&data);
+        fscanf(stdout, "%c%*c", &current_moviment);
+        move_pacman(&data, current_moviment);
     }
 
     destroy(&data);
