@@ -6,7 +6,8 @@
         "structures",
         "ranking",
         "helpers",
-        "imports"
+        "imports",
+        "statistics"
     ],
     "files.associations": {
         "stdarg.h": "c",
