@@ -10,8 +10,8 @@
 void create_ranking_file(data *data)
 {
     FILE *file;
-    draw *draw;
-    ranking *partial_ranking;
+    draw draw;
+    ranking partial_ranking;
     char *ranking = calloc(POSSIBLE_MOVIMENTS + 1, sizeof(char));
     char letters[POSSIBLE_MOVIMENTS] = {'w', 'a', 's', 'd'};
     char *ranking_file = create_output_files_path(
@@ -19,15 +19,15 @@ void create_ranking_file(data *data)
         RANKING_FILE_NAME
     );
 
-    for (short int index; index < POSSIBLE_MOVIMENTS; index++)
+    for (short int index = 0; index < POSSIBLE_MOVIMENTS; index++)
     {
         partial_ranking = get_biggest_food_rank(data, letters[index]);
-        ranking[index] = partial_ranking->letter;
+        ranking[index] = partial_ranking.letter;
     }
 
     file = fopen(ranking_file, "w");
     draw = validate_draw(&data->output, ranking, get_food_statistics);
-    create_rank(draw, &data->output, ranking, 'f');
+    create_rank(&draw, &data->output, ranking, 'f');
 
     for (int index = 0; index < POSSIBLE_MOVIMENTS; index++)
     {
@@ -46,8 +46,8 @@ void create_rank(draw *draw, output *output, char *ranking, char context)
 {
     switch (context)
     {
-        case 'f': create_rank_by_context(draw, output, ranking, get_wall_statistics, 'w'); break;
-        case 'w': create_rank_by_context(draw, output, ranking, get_moviments_statistics, 'm'); break;
+        case 'f': create_rank_by_context(draw, output, ranking, 'w', get_wall_statistics); break;
+        case 'w': create_rank_by_context(draw, output, ranking, 'm', get_moviments_statistics); break;
         case 'm':
         {
             ascending_order(ranking);
@@ -57,29 +57,28 @@ void create_rank(draw *draw, output *output, char *ranking, char context)
     }
 }
 
-void create_rank_by_context(draw *draw, output *output, char *ranking, char context, short int (*context_statistics)(void *, char))
+void create_rank_by_context(draw *draw, output *output, char *ranking, char context, short int (*context_statistics)(struct output_data *, char))
 {
-    struct draw *aux = NULL;
+    struct draw aux;
 
     for (int index = 0; index < draw->length; index++)
     {
         aux = validate_draw(output, ranking, context_statistics);
 
-        if (aux->has_draw) create_rank(aux, output, ranking, context);
-        if (!aux->has_draw)
+        if (aux.has_draw) create_rank(&aux, output, ranking, context);
+        if (!aux.has_draw)
         {
-            for (int index = 0; index < aux->length; index++)
+            for (int index = 0; index < aux.length; index++)
             {
-                ranking[index] = aux->draw_group[index]->moviments[0];
+                ranking[index] = aux.draw_group[index]->moviments[0];
             }
         }
 
         destroy_draw(draw);
-        destroy_draw(aux);
     }
 }
 
-draw *validate_draw(output *output, char *ranking, short int (*context_statistics)(struct output_data *, char))
+draw validate_draw(output *output, char *ranking, short int (*context_statistics)(struct output_data *, char))
 {
     draw draw;
     draw.length = 0;
@@ -107,10 +106,10 @@ draw *validate_draw(output *output, char *ranking, short int (*context_statistic
         }
     }
 
-    return &draw;
+    return draw;
 }
 
-ranking *get_biggest_food_rank(data *data, char letter)
+ranking get_biggest_food_rank(data *data, char letter)
 {
     ranking partial_ranking;
 
@@ -127,10 +126,10 @@ ranking *get_biggest_food_rank(data *data, char letter)
     set_biggest_value(&partial_ranking, letter, data->output.s_statistics.moviments_food_taken);
     set_biggest_value(&partial_ranking, letter, data->output.d_statistics.moviments_food_taken);
 
-    return &partial_ranking;
+    return partial_ranking;
 }
 
-ranking *get_lowest_wall_rank(data *data, char letter)
+ranking get_lowest_wall_rank(data *data, char letter)
 {
     ranking partial_ranking;
 
@@ -147,7 +146,7 @@ ranking *get_lowest_wall_rank(data *data, char letter)
     set_biggest_value(&partial_ranking, letter, data->output.s_statistics.moviments_wall_colision);
     set_biggest_value(&partial_ranking, letter, data->output.d_statistics.moviments_wall_colision);
 
-    return &partial_ranking;
+    return partial_ranking;
 }
 
 void set_biggest_value(ranking *ranking, char letter, short int number)
