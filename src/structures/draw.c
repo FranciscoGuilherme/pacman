@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdarg.h>
 
 #include "../headers/structures/draw.h"
@@ -35,7 +36,7 @@ void push_element_to_group(draw *draw, short int amount, ...)
         add_new_group(draw);
         draw->draw_group[0]->length = amount;
         draw->draw_group[0]->moviments = (char *) malloc(amount * sizeof(char));
-        draw->draw_group[0]->moviments[0] = va_arg(valist, char);
+        draw->draw_group[0]->moviments[0] = va_arg(valist, int);
 
         return;
     }
@@ -48,7 +49,7 @@ void push_element_to_group(draw *draw, short int amount, ...)
             draw->draw_group[draw->length - 1]->moviments,
             draw->draw_group[draw->length - 1]->length * sizeof(char)
         );
-        draw->draw_group[draw->length - 1]->moviments[counter] = va_arg(valist, char);
+        draw->draw_group[draw->length - 1]->moviments[counter] = va_arg(valist, int);
     }
 
     va_end(valist);
