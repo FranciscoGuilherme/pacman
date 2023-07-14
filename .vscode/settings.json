@@ -14,6 +14,7 @@
         "output.h": "c",
         "pacman.h": "c",
         "statistics.h": "c",
-        "summary.h": "c"
+        "summary.h": "c",
+        "ranking.h": "c"
     }
 }
