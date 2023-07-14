@@ -5,6 +5,7 @@
 
 #include "headers/pacman.h"
 #include "headers/helpers.h"
+#include "headers/reports/ranking.h"
 #include "headers/reports/summary.h"
 #include "headers/reports/statistics.h"
 
@@ -97,6 +98,8 @@ int is_wall_w(input *input)
     ) {
         return 1;
     }
+
+    return 0;
 }
 
 int is_food_w(input *input)
@@ -105,6 +108,8 @@ int is_food_w(input *input)
     {
         return 1;
     }
+
+    return 0;
 }
 
 void game_over(data *data)
