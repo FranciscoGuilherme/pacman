@@ -1,6 +1,6 @@
-#include "headers/output.h"
+#include "../headers/structures/output.h"
 
-short int get_food_statistics(output *output, char letter)
+short int get_food_statistics(struct output_data *output, char letter)
 {
     switch (letter)
     {
@@ -11,7 +11,7 @@ short int get_food_statistics(output *output, char letter)
     }
 }
 
-short int get_wall_statistics(output *output, char letter)
+short int get_wall_statistics(struct output_data *output, char letter)
 {
     switch (letter)
     {
@@ -22,7 +22,7 @@ short int get_wall_statistics(output *output, char letter)
     }
 }
 
-short int get_moviments_statistics(output *output, char letter)
+short int get_moviments_statistics(struct output_data *output, char letter)
 {
     switch (letter)
     {

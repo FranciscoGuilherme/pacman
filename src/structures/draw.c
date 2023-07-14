@@ -1,6 +1,6 @@
 #include <stdarg.h>
 
-#include "headers/draw.h"
+#include "../headers/structures/draw.h"
 
 void add_new_group(draw *draw)
 {
