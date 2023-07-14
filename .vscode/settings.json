@@ -5,9 +5,15 @@
         "output",
         "structures",
         "ranking",
-        "helpers"
+        "helpers",
+        "imports"
     ],
     "files.associations": {
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "draw.h": "c",
+        "output.h": "c",
+        "pacman.h": "c",
+        "statistics.h": "c",
+        "summary.h": "c"
     }
 }
