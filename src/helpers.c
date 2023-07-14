@@ -36,3 +36,13 @@ void ascending_order(char *chars_list)
         }
     }
 }
+
+void destroy_initial_parameters(int argc, char **argv)
+{
+    for (int index = 0; index < argc; index++)
+    {
+        free(argv[index]);
+    }
+
+    free(argv);
+}
