@@ -40,6 +40,7 @@ void create_ranking_file(data *data)
     }
 
     fclose(file);
+    free(ranking_file);
 }
 
 void create_rank(draw *draw, output *output, char *ranking, char context)

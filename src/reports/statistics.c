@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../headers/pacman.h"
 #include "../headers/helpers.h"
@@ -30,4 +31,5 @@ void create_statistics_file(data *data)
     fprintf(file, "Numero de movimentos para esquerda: %d\n", data->output.a_statistics.moviments);
     fprintf(file, "Numero de movimentos para direita: %d\n", data->output.d_statistics.moviments);
     fclose(file);
+    free(statistics_file);
 }

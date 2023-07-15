@@ -53,6 +53,7 @@ void create_starter_file(input *input)
     );
 
     fclose(file);
+    free(start_file);
 }
 
 void move_pacman(data *data, char moviment)
@@ -133,8 +134,8 @@ void destroy(data *data)
 
     free(data->output.trail);
     free(data->input.original);
-    free(data->input.directory);
     free(data->input.ghosts.list);
+    free(data->output.summary_file);
 }
 
 void destroy_multiple(short int amount, ...)
