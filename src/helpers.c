@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "headers/pacman.h"
 #include "headers/helpers.h"
 
 char *create_output_files_path(char *directory, char *file_base_name)
@@ -35,4 +36,14 @@ void ascending_order(char *chars_list)
             }
         }
     }
+}
+
+int check_content(char content, char expect_content)
+{
+    if (content == expect_content)
+    {
+        return IT_IS_TRUE;
+    }
+
+    return IT_IS_FALSE;
 }
