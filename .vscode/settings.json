@@ -7,7 +7,9 @@
         "ranking",
         "helpers",
         "imports",
-        "statistics"
+        "statistics",
+        "moviments-actions",
+        "ghosts"
     ],
     "files.associations": {
         "stdarg.h": "c",
@@ -16,6 +18,7 @@
         "pacman.h": "c",
         "statistics.h": "c",
         "summary.h": "c",
-        "ranking.h": "c"
+        "ranking.h": "c",
+        "generic.h": "c"
     }
 }
