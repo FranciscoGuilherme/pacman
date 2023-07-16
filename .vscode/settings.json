@@ -9,7 +9,9 @@
         "imports",
         "statistics",
         "moviments-actions",
-        "ghosts"
+        "ghosts",
+        "input",
+        "pacman"
     ],
     "files.associations": {
         "stdarg.h": "c",
