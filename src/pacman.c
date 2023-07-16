@@ -78,9 +78,9 @@ void move_ghosts(data *data)
 void ghost_up_actions(data *data, ghost *ghost)
 {
     //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_up(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_up(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_up(&data->input.original, &ghost->position)) {
+    if (is_wall_up(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_up(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_up(data->input.original, &ghost->position)) {
         ghost->position.row -= 1;
         game_over(data);
     }
@@ -89,9 +89,9 @@ void ghost_up_actions(data *data, ghost *ghost)
 void ghost_down_actions(data *data, ghost *ghost)
 {
     //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_down(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_down(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_down(&data->input.original, &ghost->position)) {
+    if (is_wall_down(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_down(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_down(data->input.original, &ghost->position)) {
         ghost->position.row += 1;
         game_over(data);
     }
@@ -100,9 +100,9 @@ void ghost_down_actions(data *data, ghost *ghost)
 void ghost_left_actions(data *data, ghost *ghost)
 {
     //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_left(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_left(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_left(&data->input.original, &ghost->position)) {
+    if (is_wall_left(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_left(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_left(data->input.original, &ghost->position)) {
         ghost->position.column -= 1;
         game_over(data);
     }
@@ -111,9 +111,9 @@ void ghost_left_actions(data *data, ghost *ghost)
 void ghost_right_actions(data *data, ghost *ghost)
 {
     //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_right(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_right(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_right(&data->input.original, &ghost->position)) {
+    if (is_wall_right(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_right(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_right(data->input.original, &ghost->position)) {
         ghost->position.column += 1;
         game_over(data);
     }
@@ -129,14 +129,14 @@ void move_pacman(data *data, char moviment)
         case 'w': {
             data->output.w_statistics.moviments++;
 
-            if (is_wall_up(&data->input.original, &data->input.pacman))
+            if (is_wall_up(data->input.original, &data->input.pacman))
             {
                 data->output.w_statistics.moviments_wall_colision++;
 
                 update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
             }
 
-            if (is_food_up(&data->input.original, &data->input.pacman))
+            if (is_food_up(data->input.original, &data->input.pacman))
             {
                 data->output.moviments_without_food--;
                 data->output.w_statistics.moviments_food_taken++;
