@@ -8,6 +8,10 @@
 #include "headers/reports/ranking.h"
 #include "headers/reports/summary.h"
 #include "headers/reports/statistics.h"
+#include "headers/validations/up.h"
+#include "headers/validations/down.h"
+#include "headers/validations/left.h"
+#include "headers/validations/right.h"
 
 void show_map(data *data)
 {
@@ -62,20 +66,56 @@ void move_ghosts(data *data)
     {
         switch (data->input.ghosts.list[amount]->direction)
         {
-            case GHOST_UP:
-            {
-                if (is_wall_up(&data->input.original, &data->input.pacman))
-                {
-                    data->input.ghosts.list[amount]->direction = GHOST_DOWN;
-                }
-
-                return;
-            }
-            case GHOST_DOWN: {return;}
-            case GHOST_LEFT: {return;}
-            case GHOST_RIGHT: {return;}
+            case GHOST_UP: ghost_up_actions(data, data->input.ghosts.list[amount]); return;
+            case GHOST_DOWN: ghost_down_actions(data, data->input.ghosts.list[amount]); return;
+            case GHOST_LEFT: ghost_left_actions(data, data->input.ghosts.list[amount]); return;
+            case GHOST_RIGHT: ghost_right_actions(data, data->input.ghosts.list[amount]); return;
             default: return;
         }
+    }
+}
+
+void ghost_up_actions(data *data, ghost *ghost)
+{
+    //TODO: implementar um jeito de marcar colisao com fantasma.
+    if (is_wall_up(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_up(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_up(&data->input.original, &ghost->position)) {
+        ghost->position.row -= 1;
+        game_over(data);
+    }
+}
+
+void ghost_down_actions(data *data, ghost *ghost)
+{
+    //TODO: implementar um jeito de marcar colisao com fantasma.
+    if (is_wall_down(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_down(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_down(&data->input.original, &ghost->position)) {
+        ghost->position.row += 1;
+        game_over(data);
+    }
+}
+
+void ghost_left_actions(data *data, ghost *ghost)
+{
+    //TODO: implementar um jeito de marcar colisao com fantasma.
+    if (is_wall_left(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_left(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_left(&data->input.original, &ghost->position)) {
+        ghost->position.column -= 1;
+        game_over(data);
+    }
+}
+
+void ghost_right_actions(data *data, ghost *ghost)
+{
+    //TODO: implementar um jeito de marcar colisao com fantasma.
+    if (is_wall_right(&data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
+    if (is_tunel_right(&data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
+    if (is_player_right(&data->input.original, &ghost->position)) {
+        ghost->position.column += 1;
+        game_over(data);
     }
 }
 
@@ -96,7 +136,7 @@ void move_pacman(data *data, char moviment)
                 update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
             }
 
-            if (is_wall_up(&data->input.original, &data->input.pacman))
+            if (is_food_up(&data->input.original, &data->input.pacman))
             {
                 data->output.moviments_without_food--;
                 data->output.w_statistics.moviments_food_taken++;
@@ -113,26 +153,6 @@ void move_pacman(data *data, char moviment)
             //TODO: validar se for tunel
         }
     }
-}
-
-int is_wall_up(char **map, coordenates *coordenates)
-{
-    if (map[coordenates->row - 1][coordenates->column] == WALL)
-    {
-        return IT_IS_TRUE;
-    }
-
-    return IT_IS_FALSE;
-}
-
-int is_food_up(char **map, coordenates *coordenates)
-{
-    if (map[coordenates->row - 1][coordenates->column] == FOOD)
-    {
-        return IT_IS_TRUE;
-    }
-
-    return IT_IS_FALSE;
 }
 
 void game_over(data *data)

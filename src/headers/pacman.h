@@ -82,9 +82,12 @@ typedef struct data
 
 void show_map(data *data);
 void create_starter_file(input *input);
+void move_ghosts(data *data);
+void ghost_up_actions(data *data, ghost *ghost);
+void ghost_down_actions(data *data, ghost *ghost);
+void ghost_left_actions(data *data, ghost *ghost);
+void ghost_right_actions(data *data, ghost *ghost);
 void move_pacman(data *data, char moviment);
-int is_wall_up(char **map, coordenates *coordenates);
-int is_food_up(char **map, coordenates *coordenates);
 void create_statistics_file(data *data);
 void game_over(data *data);
 void destroy(data *data);
