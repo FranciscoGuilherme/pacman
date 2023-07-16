@@ -1,19 +1,34 @@
 #ifndef _PACMAN_H
 #define _PACMAN_H
 
-#define MAP_FILE_NAME "mapa.txt"
-#define PLAY_FILE_NAME "jogadas.txt"
-#define START_FILE_NAME "inicializacao.txt"
-#define SUMMARY_FILE_NAME "resumo.txt"
-#define RANKING_FILE_NAME "ranking.txt"
-#define STATISTICS_FILE_NAME "estatisticas.txt"
+#define WALL '#'
+#define FOOD '*'
+#define TUNEL '@'
+#define PLAYER '>'
+#define GHOST_UP 'U'
+#define GHOST_DOWN 'D'
+#define GHOST_LEFT 'L'
+#define GHOST_RIGHT 'R'
+#define PACMAN_UP 'w'
+#define PACMAN_DOWN 's'
+#define PACMAN_LEFT 'a'
+#define PACMAN_RIGHT 'd'
+#define IT_IS_TRUE 1;
+#define IT_IS_FALSE 0;
+#define POSSIBLE_MOVIMENTS 4
+
+#define FILE_NAME_MAP "mapa.txt"
+#define FILE_NAME_PLAYS "jogadas.txt"
+#define FILE_NAME_START "inicializacao.txt"
+#define FILE_NAME_SUMMARY "resumo.txt"
+#define FILE_NAME_RANKING "ranking.txt"
+#define FILE_NAME_STATISTICS "estatisticas.txt"
 
 #define ERROR_READ_DATA "Erro ao ler os dados de entrada"
 #define MESSAGE_FOOD_TAKEN "Movimento %d (%c) pegou comida\n"
 #define MESSAGE_WALL_COLISION "Movimento %d (%c) colidiu com a parede\n"
 #define MESSAGE_GHOST_COLISION "Movimento %d (%c) fim de jogo por encostar em um fantasma\n"
 
-#define POSSIBLE_MOVIMENTS 4
 #define moviments_limit_achieved(number) number == POSSIBLE_MOVIMENTS
 #define finalize() printf(" - %s - Linha: %d\n", __FILE__, __LINE__); exit(EXIT_FAILURE);
 #define check_error(condition, mesg, ...) \
@@ -68,8 +83,8 @@ typedef struct data
 void show_map(data *data);
 void create_starter_file(input *input);
 void move_pacman(data *data, char moviment);
-int is_wall_w(input *input);
-int is_food_w(input *input);
+int is_wall_up(char **map, coordenates *coordenates);
+int is_food_up(char **map, coordenates *coordenates);
 void create_statistics_file(data *data);
 void game_over(data *data);
 void destroy(data *data);

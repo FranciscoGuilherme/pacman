@@ -37,7 +37,7 @@ void create_starter_file(input *input)
 {
     char *start_file = create_output_files_path(
         input->directory,
-        START_FILE_NAME
+        FILE_NAME_START
     );
 
     FILE *file = fopen(start_file, "w");
@@ -56,6 +56,29 @@ void create_starter_file(input *input)
     free(start_file);
 }
 
+void move_ghosts(data *data)
+{
+    for (short int amount = 0; amount < data->input.ghosts.amount; amount++)
+    {
+        switch (data->input.ghosts.list[amount]->direction)
+        {
+            case GHOST_UP:
+            {
+                if (is_wall_up(&data->input.original, &data->input.pacman))
+                {
+                    data->input.ghosts.list[amount]->direction = GHOST_DOWN;
+                }
+
+                return;
+            }
+            case GHOST_DOWN: {return;}
+            case GHOST_LEFT: {return;}
+            case GHOST_RIGHT: {return;}
+            default: return;
+        }
+    }
+}
+
 void move_pacman(data *data, char moviment)
 {
     //TODO: movimentar fantasmas
@@ -66,14 +89,14 @@ void move_pacman(data *data, char moviment)
         case 'w': {
             data->output.w_statistics.moviments++;
 
-            if (is_wall_w(&data->input))
+            if (is_wall_up(&data->input.original, &data->input.pacman))
             {
                 data->output.w_statistics.moviments_wall_colision++;
 
                 update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
             }
 
-            if (is_food_w(&data->input))
+            if (is_wall_up(&data->input.original, &data->input.pacman))
             {
                 data->output.moviments_without_food--;
                 data->output.w_statistics.moviments_food_taken++;
@@ -92,25 +115,24 @@ void move_pacman(data *data, char moviment)
     }
 }
 
-int is_wall_w(input *input)
+int is_wall_up(char **map, coordenates *coordenates)
 {
-    if (input->pacman.row - 1 == 0 ||
-        input->original[input->pacman.row - 1][input->pacman.column] == '#'
-    ) {
-        return 1;
+    if (map[coordenates->row - 1][coordenates->column] == WALL)
+    {
+        return IT_IS_TRUE;
     }
 
-    return 0;
+    return IT_IS_FALSE;
 }
 
-int is_food_w(input *input)
+int is_food_up(char **map, coordenates *coordenates)
 {
-    if (input->original[input->pacman.row - 1][input->pacman.column] == '*')
+    if (map[coordenates->row - 1][coordenates->column] == FOOD)
     {
-        return 1;
+        return IT_IS_TRUE;
     }
 
-    return 0;
+    return IT_IS_FALSE;
 }
 
 void game_over(data *data)
