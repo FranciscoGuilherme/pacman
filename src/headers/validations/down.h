@@ -6,6 +6,7 @@
 int is_wall_down(char **map, coordenates *coordenates);
 int is_food_down(char **map, coordenates *coordenates);
 int is_tunel_down(char **map, coordenates *coordenates);
+int is_ghost_down(char **map, coordenates *coordenates);
 int is_player_down(char **map, coordenates *coordenates);
 
 #endif
