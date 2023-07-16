@@ -11,12 +11,12 @@ void directory_is_defined(int condition)
 
 void prepare_map_file_path(char **directory, char **map_file)
 {
-    short int length = strlen(*directory) + strlen(MAP_FILE_NAME) + 2;
+    short int length = strlen(*directory) + strlen(FILE_NAME_MAP) + 2;
 
     *map_file = calloc(length, sizeof(char));
     strcpy(*map_file, *directory);
     strcat(*map_file, "/");
-    strcat(*map_file, MAP_FILE_NAME);
+    strcat(*map_file, FILE_NAME_MAP);
 }
 
 void set_ghost(

@@ -27,7 +27,7 @@ void initialize(data *data, char **argv)
     data->output.d_statistics.moviments_wall_colision = 0;
     data->output.summary_file = create_output_files_path(
         data->input.directory,
-        SUMMARY_FILE_NAME
+        FILE_NAME_SUMMARY
     );
 }
 
@@ -39,7 +39,10 @@ int main(int argc, char *argv[])
 
     directory_is_defined(argc > 1);
     initialize(&data, argv);
-    destroy_initial_parameters(argc, argv);
+
+    (void) argc;
+    (void) argv;
+
     prepare_map_file_path(&data.input.directory, &map_file);
     read_data(&map_file, &data);
     create_starter_file(&data.input);

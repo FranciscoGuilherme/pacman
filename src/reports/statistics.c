@@ -9,7 +9,7 @@ void create_statistics_file(data *data)
 {
     char *statistics_file = create_output_files_path(
         data->input.directory,
-        STATISTICS_FILE_NAME
+        FILE_NAME_STATISTICS
     );
     int moviments_done =
         data->output.w_statistics.moviments +

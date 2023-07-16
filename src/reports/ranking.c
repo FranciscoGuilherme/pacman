@@ -16,7 +16,7 @@ void create_ranking_file(data *data)
     char letters[POSSIBLE_MOVIMENTS] = {'w', 'a', 's', 'd'};
     char *ranking_file = create_output_files_path(
         data->input.directory,
-        RANKING_FILE_NAME
+        FILE_NAME_RANKING
     );
 
     for (short int index = 0; index < POSSIBLE_MOVIMENTS; index++)
