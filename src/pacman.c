@@ -37,88 +37,6 @@ void debug_maps(data *data)
     }
 }
 
-void create_starter_file(input *input)
-{
-    char *start_file = create_output_files_path(
-        input->directory,
-        FILE_NAME_START
-    );
-
-    FILE *file = fopen(start_file, "w");
-
-    for (short int row = 0; row < input->rows; row++)
-    {
-        fprintf(file, "%s\n", input->original[row]);
-    }
-
-    fprintf(file, "Pac-Man comecara o jogo na linha %hu e coluna %hu\n",
-        input->pacman.row,
-        input->pacman.column
-    );
-
-    fclose(file);
-    free(start_file);
-}
-
-void move_ghosts(data *data)
-{
-    for (short int amount = 0; amount < data->input.ghosts.amount; amount++)
-    {
-        switch (data->input.ghosts.list[amount]->direction)
-        {
-            case GHOST_UP: ghost_up_actions(data, data->input.ghosts.list[amount]); return;
-            case GHOST_DOWN: ghost_down_actions(data, data->input.ghosts.list[amount]); return;
-            case GHOST_LEFT: ghost_left_actions(data, data->input.ghosts.list[amount]); return;
-            case GHOST_RIGHT: ghost_right_actions(data, data->input.ghosts.list[amount]); return;
-            default: return;
-        }
-    }
-}
-
-void ghost_up_actions(data *data, ghost *ghost)
-{
-    //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_up(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_up(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_up(data->input.original, &ghost->position)) {
-        ghost->position.row -= 1;
-        game_over(data);
-    }
-}
-
-void ghost_down_actions(data *data, ghost *ghost)
-{
-    //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_down(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_down(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_down(data->input.original, &ghost->position)) {
-        ghost->position.row += 1;
-        game_over(data);
-    }
-}
-
-void ghost_left_actions(data *data, ghost *ghost)
-{
-    //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_left(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_left(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_left(data->input.original, &ghost->position)) {
-        ghost->position.column -= 1;
-        game_over(data);
-    }
-}
-
-void ghost_right_actions(data *data, ghost *ghost)
-{
-    //TODO: implementar um jeito de marcar colisao com fantasma.
-    if (is_wall_right(data->input.original, &ghost->position)) ghost->direction = GHOST_DOWN;
-    if (is_tunel_right(data->input.original, &ghost->position)) //TODO: implementar teleporte para ghost
-    if (is_player_right(data->input.original, &ghost->position)) {
-        ghost->position.column += 1;
-        game_over(data);
-    }
-}
-
 void move_pacman(data *data, char moviment)
 {
     //TODO: movimentar fantasmas
@@ -126,7 +44,7 @@ void move_pacman(data *data, char moviment)
 
     switch (moviment)
     {
-        case 'w': {
+        case PACMAN_UP: {
             data->output.w_statistics.moviments++;
 
             if (is_wall_up(data->input.original, &data->input.pacman))
