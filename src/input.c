@@ -50,6 +50,8 @@ void set_ghost(
         data->input.ghosts.list[data->input.ghosts.amount - 1]->position.row = row;
         data->input.ghosts.list[data->input.ghosts.amount - 1]->position.column = column;
     }
+
+    data->input.original[row][column] = EMPTY;
 }
 
 void read_map(FILE *map_file, data *data)
