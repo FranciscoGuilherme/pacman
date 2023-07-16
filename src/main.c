@@ -3,8 +3,10 @@
 #include <string.h>
 
 #include "headers/input.h"
+#include "headers/ghost.h"
 #include "headers/pacman.h"
 #include "headers/helpers.h"
+#include "headers/reports/startup.h"
 
 void initialize(data *data, char **argv)
 {
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
 
     prepare_map_file_path(&data.input.directory, &map_file);
     read_data(&map_file, &data);
-    create_starter_file(&data.input);
+    create_startup_file(&data.input);
     free(map_file);
 
     for (int amount = 0; amount < data.input.moviments; amount++)
@@ -53,6 +55,7 @@ int main(int argc, char *argv[])
         show_map(&data);
         check_read(fscanf(stdout, "%c%*c", &current_moviment));
         move_pacman(&data, current_moviment);
+        move_ghosts(&data, current_moviment);
     }
 
     destroy(&data);
