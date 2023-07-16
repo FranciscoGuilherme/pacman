@@ -17,8 +17,27 @@ void show_map(data *data)
 {
     for (short int row = 0; row < data->input.rows; row++)
     {
-        puts(data->input.original[row]);
+        for (short int column = 0; column < data->input.columns; column++)
+        {
+            rules_to_show_map(row, column, data);
+        }
     }
+}
+
+void rules_to_show_map(short int row, short int column, data *data)
+{
+    for (short int amount = 0; amount < data->input.ghosts.amount; amount++)
+    {
+        if (data->input.ghosts.list[amount]->position.row == row &&
+            data->input.ghosts.list[amount]->position.column == column
+        ) {
+            printf("%c", data->input.ghosts.list[amount]->ghost);
+
+            return;
+        }
+    }
+
+    printf("%c", data->input.original[row][column]);
 }
 
 //TODO: definir no arquivo .h, MAS E UMA FUNCAO TEMPORARIA
@@ -37,39 +56,195 @@ void debug_maps(data *data)
     }
 }
 
-void move_pacman(data *data, char moviment)
+void move_pacman(data *data, char moviment, int moviment_number)
 {
-    //TODO: movimentar fantasmas
     data->output.moviments_without_food++;
 
     switch (moviment)
     {
-        case PACMAN_UP: {
-            data->output.w_statistics.moviments++;
+        case PACMAN_UP: pacman_up_actions(data, moviment, moviment_number); return;
+        case PACMAN_DOWN: pacman_down_actions(data, moviment, moviment_number); return;
+        case PACMAN_LEFT: pacman_left_actions(data, moviment, moviment_number); return;
+        case PACMAN_RIGHT: pacman_right_actions(data, moviment, moviment_number); return;
+        default: return;
+    }
+}
 
-            if (is_wall_up(data->input.original, &data->input.pacman))
-            {
-                data->output.w_statistics.moviments_wall_colision++;
+void pacman_up_actions(data *data, char moviment, int moviment_number)
+{
+    data->output.w_statistics.moviments++;
 
-                update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
-            }
+    if (is_wall_up(data->input.original, &data->input.pacman))
+    {
+        data->output.w_statistics.moviments_wall_colision++;
 
-            if (is_food_up(data->input.original, &data->input.pacman))
-            {
-                data->output.moviments_without_food--;
-                data->output.w_statistics.moviments_food_taken++;
+        update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
 
-                update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
+        return;
+    }
 
-                if (data->output.food == data->input.total_food)
-                {
-                    game_over(data);
-                }
-            }
+    if (is_food_up(data->input.original, &data->input.pacman))
+    {
+        data->output.moviments_without_food--;
+        data->output.w_statistics.moviments_food_taken++;
+        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.original[data->input.pacman.row - 1][data->input.pacman.column] = PACMAN;
+        data->input.pacman.row -= 1;
 
-            //TODO: validar se for fantasma atualizar no resumo.txt
-            //TODO: validar se for tunel
+        update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
+
+        if (data->output.food == data->input.total_food)
+        {
+            game_over(data);
         }
+    }
+
+    if (is_tunel_up(data->input.original, &data->input.pacman))
+    {
+        //TODO: implementar teletransporte
+    }
+
+    if (is_ghost_up(data->input.original, &data->input.pacman))
+    {
+        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.pacman.row -= 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
+        game_over(data);
+    }
+}
+
+void pacman_down_actions(data *data, char moviment, int moviment_number)
+{
+    data->output.s_statistics.moviments++;
+
+    if (is_wall_down(data->input.original, &data->input.pacman))
+    {
+        data->output.w_statistics.moviments_wall_colision++;
+
+        update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
+
+        return;
+    }
+
+    if (is_food_down(data->input.original, &data->input.pacman))
+    {
+        data->output.moviments_without_food--;
+        data->output.w_statistics.moviments_food_taken++;
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.original[data->input.pacman.row + 1][data->input.pacman.column] = PACMAN;
+        data->input.pacman.row += 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
+
+        if (data->output.food == data->input.total_food)
+        {
+            game_over(data);
+        }
+    }
+
+    if (is_tunel_down(data->input.original, &data->input.pacman))
+    {
+        //TODO: implementar teletransporte
+    }
+
+    if (is_ghost_down(data->input.original, &data->input.pacman))
+    {
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.pacman.row += 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
+        game_over(data);
+    }
+}
+
+void pacman_left_actions(data *data, char moviment, int moviment_number)
+{
+    data->output.a_statistics.moviments++;
+
+    if (is_wall_left(data->input.original, &data->input.pacman))
+    {
+        data->output.w_statistics.moviments_wall_colision++;
+
+        update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
+
+        return;
+    }
+
+    if (is_food_left(data->input.original, &data->input.pacman))
+    {
+        data->output.moviments_without_food--;
+        data->output.w_statistics.moviments_food_taken++;
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.original[data->input.pacman.row][data->input.pacman.column - 1] = PACMAN;
+        data->input.pacman.column -= 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
+
+        if (data->output.food == data->input.total_food)
+        {
+            game_over(data);
+        }
+    }
+
+    if (is_tunel_left(data->input.original, &data->input.pacman))
+    {
+        //TODO: implementar teletransporte
+    }
+
+    if (is_ghost_left(data->input.original, &data->input.pacman))
+    {
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.pacman.column -= 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
+        game_over(data);
+    }
+}
+
+void pacman_right_actions(data *data, char moviment, int moviment_number)
+{
+    data->output.d_statistics.moviments++;
+
+    if (is_wall_right(data->input.original, &data->input.pacman))
+    {
+        data->output.w_statistics.moviments_wall_colision++;
+
+        update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
+
+        return;
+    }
+
+    if (is_food_right(data->input.original, &data->input.pacman))
+    {
+        data->output.moviments_without_food--;
+        data->output.w_statistics.moviments_food_taken++;
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.original[data->input.pacman.row][data->input.pacman.column + 1] = PACMAN;
+        data->input.pacman.column += 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
+
+        if (data->output.food == data->input.total_food)
+        {
+            game_over(data);
+        }
+    }
+
+    if (is_tunel_right(data->input.original, &data->input.pacman))
+    {
+        //TODO: implementar teletransporte
+    }
+
+    if (is_ghost_right(data->input.original, &data->input.pacman))
+    {
+        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+        data->input.pacman.column += 1;
+
+        update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
+        game_over(data);
     }
 }
 

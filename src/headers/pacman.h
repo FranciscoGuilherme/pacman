@@ -4,7 +4,8 @@
 #define WALL '#'
 #define FOOD '*'
 #define TUNEL '@'
-#define PLAYER '>'
+#define EMPTY ' '
+#define PACMAN '>'
 #define GHOST_UP 'U'
 #define GHOST_DOWN 'D'
 #define GHOST_LEFT 'L'
@@ -81,7 +82,12 @@ typedef struct data
 } data;
 
 void show_map(data *data);
-void move_pacman(data *data, char moviment);
+void move_pacman(data *data, char moviment, int moviment_number);
+void rules_to_show_map(short int row, short int column, data *data);
+void pacman_up_actions(data *data, char moviment, int moviment_number);
+void pacman_down_actions(data *data, char moviment, int moviment_number);
+void pacman_left_actions(data *data, char moviment, int moviment_number);
+void pacman_right_actions(data *data, char moviment, int moviment_number);
 void game_over(data *data);
 void destroy(data *data);
 void destroy_multiple(short int amount, ...);
