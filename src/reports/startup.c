@@ -3,6 +3,7 @@
 
 #include "../headers/pacman.h"
 #include "../headers/helpers.h"
+#include "../headers/reports/write_map.h"
 
 void create_startup_file(input *input)
 {
@@ -15,7 +16,12 @@ void create_startup_file(input *input)
 
     for (short int row = 0; row < input->rows; row++)
     {
-        fprintf(file, "%s\n", input->original[row]);
+        for (short int column = 0; column < input->columns; column++)
+        {
+            rules_to_write(file, row, column, input);
+        }
+
+        fprintf(file, "\n");
     }
 
     fprintf(file, "Pac-Man comecara o jogo na linha %hu e coluna %hu\n",
