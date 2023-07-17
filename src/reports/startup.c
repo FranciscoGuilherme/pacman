@@ -19,8 +19,8 @@ void create_startup_file(input *input)
     }
 
     fprintf(file, "Pac-Man comecara o jogo na linha %hu e coluna %hu\n",
-        input->pacman.row,
-        input->pacman.column
+        input->pacman.row + 1,
+        input->pacman.column + 1
     );
 
     fclose(file);
