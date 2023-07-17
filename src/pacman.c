@@ -21,6 +21,8 @@ void show_map(data *data)
         {
             rules_to_show_map(row, column, data);
         }
+
+        printf("\n");
     }
 }
 
@@ -87,10 +89,6 @@ void pacman_up_actions(data *data, char moviment, int moviment_number)
     {
         data->output.moviments_without_food--;
         data->output.w_statistics.moviments_food_taken++;
-        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
-        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
-        data->input.original[data->input.pacman.row - 1][data->input.pacman.column] = PACMAN;
-        data->input.pacman.row -= 1;
 
         update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
 
@@ -113,7 +111,14 @@ void pacman_up_actions(data *data, char moviment, int moviment_number)
 
         update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
         game_over(data);
+
+        return;
     }
+
+    data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+    data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+    data->input.original[data->input.pacman.row - 1][data->input.pacman.column] = PACMAN;
+    data->input.pacman.row -= 1;
 }
 
 void pacman_down_actions(data *data, char moviment, int moviment_number)
@@ -122,7 +127,7 @@ void pacman_down_actions(data *data, char moviment, int moviment_number)
 
     if (is_wall_down(data->input.original, &data->input.pacman))
     {
-        data->output.w_statistics.moviments_wall_colision++;
+        data->output.s_statistics.moviments_wall_colision++;
 
         update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
 
@@ -132,10 +137,7 @@ void pacman_down_actions(data *data, char moviment, int moviment_number)
     if (is_food_down(data->input.original, &data->input.pacman))
     {
         data->output.moviments_without_food--;
-        data->output.w_statistics.moviments_food_taken++;
-        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
-        data->input.original[data->input.pacman.row + 1][data->input.pacman.column] = PACMAN;
-        data->input.pacman.row += 1;
+        data->output.s_statistics.moviments_food_taken++;
 
         update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
 
@@ -152,12 +154,20 @@ void pacman_down_actions(data *data, char moviment, int moviment_number)
 
     if (is_ghost_down(data->input.original, &data->input.pacman))
     {
+        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
         data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
         data->input.pacman.row += 1;
 
         update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
         game_over(data);
+
+        return;
     }
+
+    data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+    data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+    data->input.original[data->input.pacman.row + 1][data->input.pacman.column] = PACMAN;
+    data->input.pacman.row += 1;
 }
 
 void pacman_left_actions(data *data, char moviment, int moviment_number)
@@ -166,7 +176,7 @@ void pacman_left_actions(data *data, char moviment, int moviment_number)
 
     if (is_wall_left(data->input.original, &data->input.pacman))
     {
-        data->output.w_statistics.moviments_wall_colision++;
+        data->output.a_statistics.moviments_wall_colision++;
 
         update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
 
@@ -176,10 +186,7 @@ void pacman_left_actions(data *data, char moviment, int moviment_number)
     if (is_food_left(data->input.original, &data->input.pacman))
     {
         data->output.moviments_without_food--;
-        data->output.w_statistics.moviments_food_taken++;
-        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
-        data->input.original[data->input.pacman.row][data->input.pacman.column - 1] = PACMAN;
-        data->input.pacman.column -= 1;
+        data->output.a_statistics.moviments_food_taken++;
 
         update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
 
@@ -196,12 +203,20 @@ void pacman_left_actions(data *data, char moviment, int moviment_number)
 
     if (is_ghost_left(data->input.original, &data->input.pacman))
     {
+        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
         data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
         data->input.pacman.column -= 1;
 
         update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
         game_over(data);
+
+        return;
     }
+
+    data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+    data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+    data->input.original[data->input.pacman.row][data->input.pacman.column - 1] = PACMAN;
+    data->input.pacman.column -= 1;
 }
 
 void pacman_right_actions(data *data, char moviment, int moviment_number)
@@ -210,7 +225,7 @@ void pacman_right_actions(data *data, char moviment, int moviment_number)
 
     if (is_wall_right(data->input.original, &data->input.pacman))
     {
-        data->output.w_statistics.moviments_wall_colision++;
+        data->output.d_statistics.moviments_wall_colision++;
 
         update_summary_file(&data->output, moviment, MESSAGE_WALL_COLISION);
 
@@ -220,10 +235,7 @@ void pacman_right_actions(data *data, char moviment, int moviment_number)
     if (is_food_right(data->input.original, &data->input.pacman))
     {
         data->output.moviments_without_food--;
-        data->output.w_statistics.moviments_food_taken++;
-        data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
-        data->input.original[data->input.pacman.row][data->input.pacman.column + 1] = PACMAN;
-        data->input.pacman.column += 1;
+        data->output.d_statistics.moviments_food_taken++;
 
         update_summary_file(&data->output, moviment, MESSAGE_FOOD_TAKEN);
 
@@ -240,17 +252,23 @@ void pacman_right_actions(data *data, char moviment, int moviment_number)
 
     if (is_ghost_right(data->input.original, &data->input.pacman))
     {
+        data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
         data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
         data->input.pacman.column += 1;
 
         update_summary_file(&data->output, moviment, MESSAGE_GHOST_COLISION);
         game_over(data);
     }
+
+    data->output.trail[data->input.pacman.row][data->input.pacman.column] = moviment_number;
+    data->input.original[data->input.pacman.row][data->input.pacman.column] = EMPTY;
+    data->input.original[data->input.pacman.row][data->input.pacman.column + 1] = PACMAN;
+    data->input.pacman.column += 1;
 }
 
 void game_over(data *data)
 {
-    create_ranking_file(data);
+    //create_ranking_file(data);
     create_statistics_file(data);
 }
 
