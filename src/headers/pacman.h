@@ -21,6 +21,7 @@
 #define FILE_NAME_MAP "mapa.txt"
 #define FILE_NAME_PLAYS "jogadas.txt"
 #define FILE_NAME_START "inicializacao.txt"
+#define FILE_NAME_OUTPUT "saida.txt"
 #define FILE_NAME_SUMMARY "resumo.txt"
 #define FILE_NAME_RANKING "ranking.txt"
 #define FILE_NAME_STATISTICS "estatisticas.txt"
