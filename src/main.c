@@ -6,6 +6,7 @@
 #include "headers/ghost.h"
 #include "headers/pacman.h"
 #include "headers/helpers.h"
+#include "headers/reports/exit.h"
 #include "headers/reports/startup.h"
 
 void initialize(data *data, char **argv)
@@ -13,6 +14,7 @@ void initialize(data *data, char **argv)
     data->output.food = 0;
     data->input.total_food = 0;
     data->input.ghosts.amount = 0;
+    data->input.ghosts.list = NULL;
     data->input.directory = argv[1];
     data->output.moviments_without_food = 0;
     data->output.w_statistics.moviments = 0;
@@ -53,9 +55,17 @@ int main(int argc, char *argv[])
     for (int amount = 0; amount < data.input.moviments; amount++)
     {
         check_read(fscanf(stdin, "%c%*c", &current_moviment));
+        printf("Estado do jogo apos o movimento '%c':\n", current_moviment);
         move_pacman(&data, current_moviment, amount);
         move_ghosts(&data, current_moviment);
+        update_output_file(&data, current_moviment);
         show_map(&data);
+        printf("Pontuacao: %d\n\n",
+            data.output.w_statistics.moviments_food_taken +
+            data.output.a_statistics.moviments_food_taken +
+            data.output.s_statistics.moviments_food_taken +
+            data.output.d_statistics.moviments_food_taken
+        );
     }
 
     destroy(&data);
