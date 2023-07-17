@@ -26,7 +26,9 @@ void set_ghost(
     short int row,
     short int column
 ) {
-    if (!data->input.ghosts.amount)
+    data->input.original[row][column] = EMPTY;
+
+    if (!data->input.ghosts.list)
     {
         data->input.ghosts.amount = 1;
         data->input.ghosts.list = (struct ghost **) malloc(sizeof(struct ghost *));
@@ -35,23 +37,20 @@ void set_ghost(
         data->input.ghosts.list[0]->direction = direction;
         data->input.ghosts.list[0]->position.row = row;
         data->input.ghosts.list[0]->position.column = column;
+
+        return;
     }
 
-    if (data->input.ghosts.list)
-    {
-        data->input.ghosts.amount++;
-        data->input.ghosts.list = (struct ghost **) realloc(
-            data->input.ghosts.list,
-            data->input.ghosts.amount * sizeof(struct ghost *)
-        );
-        data->input.ghosts.list[data->input.ghosts.amount - 1] = (struct ghost *) malloc(sizeof(struct ghost));
-        data->input.ghosts.list[data->input.ghosts.amount - 1]->ghost = ghost;
-        data->input.ghosts.list[data->input.ghosts.amount - 1]->direction = direction;
-        data->input.ghosts.list[data->input.ghosts.amount - 1]->position.row = row;
-        data->input.ghosts.list[data->input.ghosts.amount - 1]->position.column = column;
-    }
-
-    data->input.original[row][column] = EMPTY;
+    data->input.ghosts.amount++;
+    data->input.ghosts.list = (struct ghost **) realloc(
+        data->input.ghosts.list,
+        data->input.ghosts.amount * sizeof(struct ghost *)
+    );
+    data->input.ghosts.list[data->input.ghosts.amount - 1] = (struct ghost *) malloc(sizeof(struct ghost));
+    data->input.ghosts.list[data->input.ghosts.amount - 1]->ghost = ghost;
+    data->input.ghosts.list[data->input.ghosts.amount - 1]->direction = direction;
+    data->input.ghosts.list[data->input.ghosts.amount - 1]->position.row = row;
+    data->input.ghosts.list[data->input.ghosts.amount - 1]->position.column = column;
 }
 
 void read_map(FILE *map_file, data *data)
@@ -75,8 +74,8 @@ void read_map(FILE *map_file, data *data)
                 case 'C': set_ghost(data, 'C', 'R', row, column); break;
                 case '*': data->input.total_food++; break;
                 case '>': {
-                    data->input.pacman.row = row + 1;
-                    data->input.pacman.column = column + 1;
+                    data->input.pacman.row = row;
+                    data->input.pacman.column = column;
                     data->output.trail[row][column] = '0';
                 }
             }
