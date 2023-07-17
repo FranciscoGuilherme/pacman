@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     for (int amount = 0; amount < data.input.moviments; amount++)
     {
-        check_read(fscanf(stdout, "%c%*c", &current_moviment));
+        check_read(fscanf(stdin, "%c%*c", &current_moviment));
         move_pacman(&data, current_moviment, amount);
         move_ghosts(&data, current_moviment);
         show_map(&data);
