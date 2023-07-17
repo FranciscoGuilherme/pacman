@@ -21,6 +21,9 @@
         "statistics.h": "c",
         "summary.h": "c",
         "ranking.h": "c",
-        "generic.h": "c"
+        "generic.h": "c",
+        "out.h": "c",
+        "startup.h": "c",
+        "exit.h": "c"
     }
 }
