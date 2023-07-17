@@ -6,12 +6,12 @@
 
 void create_startup_file(input *input)
 {
-    char *start_file = create_output_files_path(
+    char *startup_file = create_output_files_path(
         input->directory,
         FILE_NAME_START
     );
 
-    FILE *file = fopen(start_file, "w");
+    FILE *file = fopen(startup_file, "w");
 
     for (short int row = 0; row < input->rows; row++)
     {
@@ -24,5 +24,5 @@ void create_startup_file(input *input)
     );
 
     fclose(file);
-    free(start_file);
+    free(startup_file);
 }
