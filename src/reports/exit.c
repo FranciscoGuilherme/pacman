@@ -3,6 +3,7 @@
 
 #include "../headers/helpers.h"
 #include "../headers/reports/exit.h"
+#include "../headers/reports/write_map.h"
 
 void update_output_file(data *data, char current_moviment)
 {
@@ -24,7 +25,7 @@ void update_output_file(data *data, char current_moviment)
     {
         for (short int column = 0; column < data->input.columns; column++)
         {
-            rules_to_write(file, row, column, data);
+            rules_to_write(file, row, column, &data->input);
         }
 
         fprintf(file, "\n");
@@ -39,20 +40,4 @@ void update_output_file(data *data, char current_moviment)
 
     fclose(file);
     free(output_file);
-}
-
-void rules_to_write(FILE *file, short int row, short int column, data *data)
-{
-    for (short int amount = 0; amount < data->input.ghosts.amount; amount++)
-    {
-        if (data->input.ghosts.list[amount]->position.row == row &&
-            data->input.ghosts.list[amount]->position.column == column
-        ) {
-            fprintf(file, "%c", data->input.ghosts.list[amount]->ghost);
-
-            return;
-        }
-    }
-
-    fprintf(file, "%c", data->input.original[row][column]);
 }
